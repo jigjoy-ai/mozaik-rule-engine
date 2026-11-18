@@ -51,4 +51,8 @@ export class Rule {
 	static create(params: CreateRuleParams): Rule {
 		return new Rule(crypto.randomUUID(), params.condition, params.input, params.directive, params.priority)
 	}
+
+	static rehydrate(record: RuleRecord): Rule {
+		return new Rule(record.id, record.condition, record.input, record.directive, record.priority)
+	}
 }
