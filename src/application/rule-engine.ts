@@ -6,7 +6,7 @@ export class RuleEngine {
 	constructor(private readonly ruleRegistry: RuleRegistry) {}
 
 	/** The rule to act on: of those whose condition holds, the one with the smallest priority. */
-	async decide(policy: Policy, input: unknown): Promise<Rule | undefined> {
+	async findMatchingRules(policy: Policy, input: unknown): Promise<Rule | undefined> {
 		const satisfiedRules = []
 
 		for (const rule of policy.getRules()) {

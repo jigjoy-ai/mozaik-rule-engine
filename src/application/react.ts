@@ -10,9 +10,8 @@ export class ReactToMessageUseCase {
 		private readonly directiveRegistry: DirectiveRegistry,
 	) {}
 
-	/** The rule that matches says what the peer reads from the envelope and what it does with it. No rule, nothing done. */
 	async execute(policy: Policy, state: unknown): Promise<unknown> {
-		const rule = await this.ruleEngine.decide(policy, state)
+		const rule = await this.ruleEngine.findMatchingRule(policy, state)
 		if (!rule) {
 			return undefined
 		}
