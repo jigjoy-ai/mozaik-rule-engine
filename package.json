@@ -1,7 +1,7 @@
 {
 	"name": "@jigjoy/mozaik-rule-engine",
 	"version": "0.0.1",
-	"description": "A rule engine for controlling agent behavior using policies.",
+	"description": "Rule engine with decorator-based rule composition",
 	"main": "dist/index.js",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
