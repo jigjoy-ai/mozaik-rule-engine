@@ -1,19 +1,19 @@
 import { ApplyPolicyUseCase } from "./application/find-and-execute-rule"
 import { RuleEvaluator } from "./application/rule-evaluator"
-import { ConditionSpecification } from "./domain/condition-specification"
+import { Condition } from "./domain/condition"
+import { ConditionRegistry } from "./domain/condition-registry"
 import { Command } from "./domain/command"
 import { CommandRegistry } from "./domain/command-registry"
 import { InputResolver } from "./domain/input-resolver"
 import { InputResolverRegistry } from "./domain/input-resolver-registry"
 import { PolicyDefinition } from "./domain/policy-factory"
 import { RuleDefinition } from "./domain/rule"
-import { RuleRegistry } from "./domain/rule-registry"
-import { InMemoryRuleRegistry } from "@infrastructure/inmemory-rule-registry"
+import { InMemoryConditionRegistry } from "@infrastructure/inmemory-condition-registry"
 import { InMemoryInputResolverRegistry } from "@infrastructure/inmemory-input-resolver-registry"
 import { InMemoryCommandRegistry } from "@infrastructure/inmemory-command-registry"
 
 export const inputResolverRegistry: InputResolverRegistry = new InMemoryInputResolverRegistry()
-export const inMemoryRuleRegistry: RuleRegistry = new InMemoryRuleRegistry()
+export const conditionRegistry: ConditionRegistry = new InMemoryConditionRegistry()
 export const commandRegistry: CommandRegistry = new InMemoryCommandRegistry()
 
 function inputResolver(options: { name: string }) {
@@ -26,11 +26,11 @@ function inputResolver(options: { name: string }) {
 }
 
 function condition(options: { name: string }) {
-	return function <T extends new () => ConditionSpecification<unknown>>(
-		SpecificationClass: T,
+	return function <T extends new () => Condition<unknown>>(
+		ConditionClass: T,
 		_context: ClassDecoratorContext,
 	): void {
-		inMemoryRuleRegistry.register(options.name, new SpecificationClass())
+		conditionRegistry.register(options.name, new ConditionClass())
 	}
 }
 
@@ -41,7 +41,7 @@ function command(options: { name: string }) {
 }
 
 const applyPolicyUseCase = new ApplyPolicyUseCase(
-	new RuleEvaluator(inMemoryRuleRegistry),
+	new RuleEvaluator(conditionRegistry),
 	inputResolverRegistry,
 	commandRegistry,
 )
@@ -50,4 +50,14 @@ async function applyPolicy(policy: PolicyDefinition, input: unknown) {
 	return await applyPolicyUseCase.execute(policy, input)
 }
 
-export { inputResolver, condition, command, applyPolicy, PolicyDefinition, RuleDefinition }
+export {
+	inputResolver,
+	condition,
+	command,
+	applyPolicy,
+	Condition,
+	Command,
+	InputResolver,
+	PolicyDefinition,
+	RuleDefinition,
+}
