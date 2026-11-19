@@ -9,16 +9,6 @@ For example, a job scheduler might normally start a queued job. A higher-priorit
 The same scheduler, one step at a time. Import the module that declares these classes before calling `applyPolicy`. The decorators register each class under its `name`. They are standard JavaScript decorators, so leave `experimentalDecorators` off.
 
 ```ts
-import {
-	applyPolicy,
-	command,
-	condition,
-	Condition,
-	inputResolver,
-	type Command,
-	type InputResolver,
-	type PolicyDefinition,
-} from "@jigjoy/mozaik-rule-engine"
 
 type SchedulerState = {
 	jobId: string
