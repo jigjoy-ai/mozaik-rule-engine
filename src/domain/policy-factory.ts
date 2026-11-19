@@ -1,10 +1,14 @@
-import { CreatePolicyParams, Policy } from "./policy"
-import { Rule } from "./rule"
+import { Policy } from "./policy"
+import { Rule, RuleDefinition } from "./rule"
+
+export type PolicyDefinition = {
+	rules: RuleDefinition[]
+}
 
 export class PolicyFactory {
-	static create(params: CreatePolicyParams): Policy {
+	static create(policyDefinition: PolicyDefinition): Policy {
 		const rules: Rule[] = []
-		for (const ruleDefinition of params.rules) {
+		for (const ruleDefinition of policyDefinition.rules) {
 			const rule: Rule = Rule.create({
 				condition: ruleDefinition.condition,
 				input: ruleDefinition.input,

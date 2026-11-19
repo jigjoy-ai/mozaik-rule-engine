@@ -1,17 +1,18 @@
-import { RuleEngine } from "./rule-engine"
+import { RuleEvaluator } from "./rule-evaluator"
 import { InputResolverRegistry } from "../domain/input-resolver-registry"
 import { DirectiveRegistry } from "../domain/directive-registry"
-import { Policy } from "../domain/policy"
+import { PolicyDefinition, PolicyFactory } from "../domain/policy-factory"
 
-export class ReactToMessageUseCase {
+export class ApplyPolicyUseCase {
 	constructor(
-		private readonly ruleEngine: RuleEngine,
+		private readonly ruleEvaluator: RuleEvaluator,
 		private readonly inputResolverRegistry: InputResolverRegistry,
 		private readonly directiveRegistry: DirectiveRegistry,
 	) {}
 
-	async execute(policy: Policy, state: unknown): Promise<unknown> {
-		const rule = await this.ruleEngine.findMatchingRule(policy, state)
+	async execute(policyDefinition: PolicyDefinition, state: unknown): Promise<unknown> {
+		const policy = PolicyFactory.create(policyDefinition)
+		const rule = await this.ruleEvaluator.findMatchingRule(policy, state)
 		if (!rule) {
 			return undefined
 		}

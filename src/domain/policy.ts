@@ -1,8 +1,4 @@
-import { CreateRuleParams, Rule } from "./rule"
-
-export type CreatePolicyParams = {
-	rules: CreateRuleParams[]
-}
+import { Rule } from "./rule"
 
 export class Policy {
 	private id: string

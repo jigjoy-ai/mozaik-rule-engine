@@ -1,4 +1,4 @@
-export type CreateRuleParams = {
+export type RuleDefinition = {
 	condition: string
 	input: string
 	directive: string | any
@@ -48,8 +48,14 @@ export class Rule {
 		return this.priority
 	}
 
-	static create(params: CreateRuleParams): Rule {
-		return new Rule(crypto.randomUUID(), params.condition, params.input, params.directive, params.priority)
+	static create(ruleDefinition: RuleDefinition): Rule {
+		return new Rule(
+			crypto.randomUUID(),
+			ruleDefinition.condition,
+			ruleDefinition.input,
+			ruleDefinition.directive,
+			ruleDefinition.priority,
+		)
 	}
 
 	static rehydrate(record: RuleRecord): Rule {
