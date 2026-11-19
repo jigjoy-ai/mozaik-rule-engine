@@ -6,9 +6,7 @@ For example, a job scheduler might normally start a queued job. A higher-priorit
 
 ## Usage
 
-Define a condition, an input resolver, and a command with decorators. The decorator `name` is the id you reference from a policy. Import the module that declares these classes before calling `applyPolicy`, so the decorators register them.
-
-A smaller `priority` wins. When two matching rules share a priority, the earlier one in the policy runs. An omitted priority is `0`. If no rule matches, or the named command was never registered, `applyPolicy` returns `undefined`.
+The same scheduler, one step at a time. Import the module that declares these classes before calling `applyPolicy`. The decorators register each class under its `name`. They are standard JavaScript decorators, so leave `experimentalDecorators` off.
 
 ```ts
 import {
@@ -31,7 +29,11 @@ type SchedulerState = {
 type JobCommandInput = {
 	jobId: string
 }
+```
 
+### Specify a condition
+
+```ts
 @condition({ name: "job-queued" })
 class JobQueued extends Condition<SchedulerState> {
 	isSatisfiedBy(state: SchedulerState): boolean {
@@ -45,14 +47,24 @@ class PoolAtCapacity extends Condition<SchedulerState> {
 		return state.activeWorkers >= state.poolSize
 	}
 }
+```
 
+### Specify an input resolver
+
+The resolver turns the current state into the input a command receives.
+
+```ts
 @inputResolver({ name: "job-command-input" })
 class JobCommandInputResolver implements InputResolver<SchedulerState, JobCommandInput> {
 	async resolve(state: SchedulerState): Promise<JobCommandInput> {
 		return { jobId: state.jobId }
 	}
 }
+```
 
+### Specify a command
+
+```ts
 @command({ name: "start-job" })
 class StartJob implements Command<JobCommandInput, string> {
 	invoke(input: JobCommandInput): string {
@@ -66,7 +78,13 @@ class DeferJob implements Command<JobCommandInput, string> {
 		return `defer ${input.jobId}`
 	}
 }
+```
 
+### Add rules to a policy
+
+A smaller `priority` wins. An omitted priority is `0`. When two matches share a priority, the earlier rule runs.
+
+```ts
 const schedulerPolicy: PolicyDefinition = {
 	rules: [
 		{
@@ -83,27 +101,27 @@ const schedulerPolicy: PolicyDefinition = {
 		},
 	],
 }
+```
 
-async function schedule(state: SchedulerState) {
-	return applyPolicy(schedulerPolicy, state)
-}
+### Evaluate and execute
 
-const deferred = await schedule({
+`applyPolicy` runs the command from the winning rule. If nothing matches, or that command was never registered, it returns `undefined`.
+
+```ts
+const deferred = await applyPolicy(schedulerPolicy, {
 	jobId: "job-42",
 	activeWorkers: 4,
 	poolSize: 4,
 })
-// "defer job-42" — both rules match, and priority 1 beats priority 10
+// "defer job-42" — both rules match, and priority 1 wins
 
-const started = await schedule({
+const started = await applyPolicy(schedulerPolicy, {
 	jobId: "job-42",
 	activeWorkers: 1,
 	poolSize: 4,
 })
 // "start job-42" — only job-queued matches
 ```
-
-These are the standard JavaScript decorators, so leave `experimentalDecorators` off.
 
 ## Why we built it
 
