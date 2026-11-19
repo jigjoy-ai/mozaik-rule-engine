@@ -1,13 +1,13 @@
 import { RuleEvaluator } from "./rule-evaluator"
 import { InputResolverRegistry } from "../domain/input-resolver-registry"
-import { DirectiveRegistry } from "../domain/directive-registry"
+import { CommandRegistry } from "../domain/command-registry"
 import { PolicyDefinition, PolicyFactory } from "../domain/policy-factory"
 
 export class ApplyPolicyUseCase {
 	constructor(
 		private readonly ruleEvaluator: RuleEvaluator,
 		private readonly inputResolverRegistry: InputResolverRegistry,
-		private readonly directiveRegistry: DirectiveRegistry,
+		private readonly commandRegistry: CommandRegistry,
 	) {}
 
 	async execute(policyDefinition: PolicyDefinition, state: unknown): Promise<unknown> {
@@ -23,10 +23,10 @@ export class ApplyPolicyUseCase {
 		}
 
 		const input = await inputResolver.resolve(state)
-		const directive = this.directiveRegistry.get(rule.getDirective())
-		if (!directive) {
+		const command = this.commandRegistry.get(rule.getCommand())
+		if (!command) {
 			return undefined
 		}
-		return await directive.invoke(input)
+		return await command.invoke(input)
 	}
 }

@@ -1,30 +1,36 @@
 export type RuleDefinition = {
 	condition: string
-	input: string
-	directive: string | any
+	inputResolver: string
+	command: string | any
 	priority?: number
 }
 
 export type RuleRecord = {
 	id: string
 	condition: string
-	input: string
-	directive: string | any
+	inputResolver: string
+	command: string | any
 	priority?: number
 }
 
 export class Rule {
 	private id: string
 	private condition: string
-	private input: string
-	private directive: string | any
+	private inputResolver: string
+	private command: string | any
 	private priority?: number
 
-	private constructor(id: string, condition: string, input: string, directive: string | any, priority?: number) {
+	private constructor(
+		id: string,
+		condition: string,
+		inputResolver: string,
+		command: string | any,
+		priority?: number,
+	) {
 		this.id = id
 		this.condition = condition
-		this.input = input
-		this.directive = directive
+		this.inputResolver = inputResolver
+		this.command = command
 		this.priority = priority
 	}
 
@@ -37,11 +43,11 @@ export class Rule {
 	}
 
 	getInput(): string {
-		return this.input
+		return this.inputResolver
 	}
 
-	getDirective(): string | any {
-		return this.directive
+	getCommand(): string | any {
+		return this.command
 	}
 
 	getPriority(): number | undefined {
@@ -52,13 +58,13 @@ export class Rule {
 		return new Rule(
 			crypto.randomUUID(),
 			ruleDefinition.condition,
-			ruleDefinition.input,
-			ruleDefinition.directive,
+			ruleDefinition.inputResolver,
+			ruleDefinition.command,
 			ruleDefinition.priority,
 		)
 	}
 
 	static rehydrate(record: RuleRecord): Rule {
-		return new Rule(record.id, record.condition, record.input, record.directive, record.priority)
+		return new Rule(record.id, record.condition, record.inputResolver, record.command, record.priority)
 	}
 }

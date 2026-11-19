@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"target": "es2018",
+		"module": "esnext",
+		"lib": ["es2018", "dom"],
+		"declaration": true,
+		"declarationMap": true,
+		"sourceMap": true,
+		"outDir": "./dist",
+		"rootDir": ".",
+		"strict": true,
+		"moduleResolution": "bundler",
+		"types": ["node"],
+		"paths": {
+			"@domain/*": ["./src/domain/*"],
+			"@application/*": ["./src/application/*"],
+			"@infrastructure/*": ["./src/infrastructure/*"]
+		},
+		"esModuleInterop": true,
+		"skipLibCheck": true
+	},
+	"include": ["src"]
+}

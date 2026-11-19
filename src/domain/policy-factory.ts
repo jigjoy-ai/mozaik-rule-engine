@@ -11,8 +11,8 @@ export class PolicyFactory {
 		for (const ruleDefinition of policyDefinition.rules) {
 			const rule: Rule = Rule.create({
 				condition: ruleDefinition.condition,
-				input: ruleDefinition.input,
-				directive: ruleDefinition.directive,
+				inputResolver: ruleDefinition.inputResolver,
+				command: ruleDefinition.command,
 				priority: ruleDefinition.priority,
 			})
 			rules.push(rule)

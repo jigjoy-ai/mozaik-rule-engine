@@ -1,0 +1,49 @@
+{
+	"name": "@jigjoy/mozaik-rule-engine",
+	"version": "0.0.1",
+	"description": "A rule engine for controlling agent behavior using policies.",
+	"main": "dist/index.js",
+	"module": "dist/index.mjs",
+	"types": "dist/index.d.ts",
+	"typesVersions": {
+		"*": {
+			"core": [
+				"dist/core/index.d.ts"
+			],
+			"providers/openai": [
+				"dist/providers/openai/index.d.ts"
+			]
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"publishConfig": {
+		"access": "public",
+		"registry": "https://registry.npmjs.org/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/jigjoy-ai/rule-engine.git"
+	},
+	"author": "Miodrag Vilotijević",
+	"scripts": {
+		"build": "tsup",
+		"dev": "tsup --watch",
+		"format": "prettier --write \"src/**/*.{ts,tsx}\"",
+		"prepublishOnly": "npm run build",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"jigjoy",
+		"mozaik",
+		"rule-engine",
+		"policy-engine"
+	],
+	"license": "MIT",
+	"devDependencies": {
+		"prettier": "^3.7.4",
+		"tsup": "^9.0.0",
+		"typescript": "^6.0.3"
+	}
+}
